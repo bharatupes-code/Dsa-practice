@@ -9,7 +9,7 @@ struct node
 
 struct node *create(); // function declaration
 
-void main()
+int main()
 {
     struct node *root;
     root = 0;
