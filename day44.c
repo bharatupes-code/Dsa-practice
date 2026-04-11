@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Tree Node
+// Node structure
 struct Node
 {
     int data;
@@ -9,7 +9,7 @@ struct Node
     struct Node *right;
 };
 
-// Create new node
+// Create node
 struct Node *createNode(int data)
 {
     struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
@@ -19,23 +19,21 @@ struct Node *createNode(int data)
     return newNode;
 }
 
-// Simple Queue (array based)
+// Queue for level order
 struct Node *queue[100];
 int front = 0, rear = 0;
 
-// Enqueue
 void enqueue(struct Node *node)
 {
     queue[rear++] = node;
 }
 
-// Dequeue
 struct Node *dequeue()
 {
     return queue[front++];
 }
 
-// Build Tree from Level Order
+// Build tree
 struct Node *buildTree(int arr[], int n)
 {
     if (n == 0 || arr[0] == -1)
@@ -70,18 +68,37 @@ struct Node *buildTree(int arr[], int n)
     return root;
 }
 
-// Inorder Traversal
+// Inorder: Left Root Right
 void inorder(struct Node *root)
 {
     if (root == NULL)
         return;
-
     inorder(root->left);
     printf("%d ", root->data);
     inorder(root->right);
 }
 
-// Main Function
+// Preorder: Root Left Right
+void preorder(struct Node *root)
+{
+    if (root == NULL)
+        return;
+    printf("%d ", root->data);
+    preorder(root->left);
+    preorder(root->right);
+}
+
+// Postorder: Left Right Root
+void postorder(struct Node *root)
+{
+    if (root == NULL)
+        return;
+    postorder(root->left);
+    postorder(root->right);
+    printf("%d ", root->data);
+}
+
+// Main
 int main()
 {
     int n;
@@ -96,6 +113,12 @@ int main()
     struct Node *root = buildTree(arr, n);
 
     inorder(root);
+    printf("\n");
+
+    preorder(root);
+    printf("\n");
+
+    postorder(root);
 
     return 0;
 }
