@@ -1,0 +1,81 @@
+#include <stdio.h>
+#define MAX 100
+#define INF 1000000000
+
+int graph[MAX][MAX];
+int dist[MAX];
+int visited[MAX];
+
+int main()
+{
+    int n, m;
+    scanf("%d %d", &n, &m);
+
+    // Initialize graph
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= n; j++)
+        {
+            graph[i][j] = INF;
+        }
+    }
+
+    int u, v, w;
+    for (int i = 0; i < m; i++)
+    {
+        scanf("%d %d %d", &u, &v, &w);
+        graph[u][v] = w;
+        graph[v][u] = w; // undirected
+    }
+
+    int source;
+    scanf("%d", &source);
+
+    // Initialize distances
+    for (int i = 1; i <= n; i++)
+    {
+        dist[i] = INF;
+    }
+    dist[source] = 0;
+
+    // Dijkstra
+    for (int i = 1; i <= n; i++)
+    {
+        int min = INF, u = -1;
+
+        // Find unvisited node with minimum distance
+        for (int j = 1; j <= n; j++)
+        {
+            if (!visited[j] && dist[j] < min)
+            {
+                min = dist[j];
+                u = j;
+            }
+        }
+
+        if (u == -1)
+            break;
+
+        visited[u] = 1;
+
+        // Update neighbors
+        for (int v = 1; v <= n; v++)
+        {
+            if (!visited[v] && graph[u][v] != INF)
+            {
+                if (dist[u] + graph[u][v] < dist[v])
+                {
+                    dist[v] = dist[u] + graph[u][v];
+                }
+            }
+        }
+    }
+
+    // Output
+    for (int i = 1; i <= n; i++)
+    {
+        printf("%d ", dist[i]);
+    }
+
+    return 0;
+}
