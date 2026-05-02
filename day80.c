@@ -1,80 +1,57 @@
 #include <stdio.h>
-#define MAX 100
-#define INF 1000000000
 
-int graph[MAX][MAX];
-int dist[MAX];
-int visited[MAX];
+#define INF 1000000000
 
 int main()
 {
-    int n, m;
-    scanf("%d %d", &n, &m);
+    int n;
+    scanf("%d", &n);
 
-    // Initialize graph
-    for (int i = 1; i <= n; i++)
+    int dist[n][n];
+
+    // Input and preprocessing
+    for (int i = 0; i < n; i++)
     {
-        for (int j = 1; j <= n; j++)
+        for (int j = 0; j < n; j++)
         {
-            graph[i][j] = INF;
-        }
-    }
+            scanf("%d", &dist[i][j]);
 
-    int u, v, w;
-    for (int i = 0; i < m; i++)
-    {
-        scanf("%d %d %d", &u, &v, &w);
-        graph[u][v] = w;
-        graph[v][u] = w; // undirected
-    }
-
-    int source;
-    scanf("%d", &source);
-
-    // Initialize distances
-    for (int i = 1; i <= n; i++)
-    {
-        dist[i] = INF;
-    }
-    dist[source] = 0;
-
-    // Dijkstra
-    for (int i = 1; i <= n; i++)
-    {
-        int min = INF, u = -1;
-
-        // Find unvisited node with minimum distance
-        for (int j = 1; j <= n; j++)
-        {
-            if (!visited[j] && dist[j] < min)
+            if (dist[i][j] == -1 && i != j)
             {
-                min = dist[j];
-                u = j;
+                dist[i][j] = INF;
             }
         }
+    }
 
-        if (u == -1)
-            break;
-
-        visited[u] = 1;
-
-        // Update neighbors
-        for (int v = 1; v <= n; v++)
+    // Floyd-Warshall Algorithm
+    for (int k = 0; k < n; k++)
+    {
+        for (int i = 0; i < n; i++)
         {
-            if (!visited[v] && graph[u][v] != INF)
+            for (int j = 0; j < n; j++)
             {
-                if (dist[u] + graph[u][v] < dist[v])
+                if (dist[i][k] < INF && dist[k][j] < INF)
                 {
-                    dist[v] = dist[u] + graph[u][v];
+                    if (dist[i][j] > dist[i][k] + dist[k][j])
+                    {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                    }
                 }
             }
         }
     }
 
-    // Output
-    for (int i = 1; i <= n; i++)
+    // Output result
+    for (int i = 0; i < n; i++)
     {
-        printf("%d ", dist[i]);
+        for (int j = 0; j < n; j++)
+        {
+            if (dist[i][j] == INF)
+                printf("-1 ");
+            else
+                printf("%d ", dist[i][j]);
+        }
+        printf("\n");
     }
 
     return 0;
